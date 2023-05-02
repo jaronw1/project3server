@@ -6,6 +6,10 @@ const PostSchema = new mongoose.Schema({
     },
     userId: {
         Number
+    },
+    postTitle: {
+        String
     }
+    
 
 })
