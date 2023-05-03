@@ -13,7 +13,6 @@ const authLockedRoute = async (req, res, next) => {
         // mount user on locals
         res.locals.user = foundUser
         next()
-
     } catch (error) {
         console.log(error)
         // respond with status 401 if auth fails

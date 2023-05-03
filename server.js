@@ -7,9 +7,9 @@ const rowdy = require('rowdy-logger')
 // config express app
 const app = express()
 const PORT = process.env.PORT || 8000
-// for debug logging 
+// for debug logging
 const rowdyResults = rowdy.begin(app)
-// cross origin resource sharing 
+// cross origin resource sharing
 app.use(cors())
 // request body parsing
 app.use(express.json())
@@ -27,4 +27,3 @@ app.listen(PORT, () => {
     rowdyResults.print()
     console.log(`is that port ${PORT} I hear? 🙉`)
 })
-
