@@ -5,14 +5,9 @@ const authLockedRoute = require('./authLockedRoute')
 
 // FEATURE COMPLETE ROUTES
 
-// INCOMPLETE ROUTES/STUBS
-
-router.get('/', (req, res) => {
-    // get several posts to populate home page
-    res.json({ msg: 'welcome to the posts endpoint' })
-})
-
 router.post('/', authLockedRoute, async (req, res) => {
+    /* currently using placeholder null values for all post details. when
+    fully implemented, this route will receive post details from a form */
     try {
         let isReview = null,
             postTitle = null,
@@ -43,14 +38,34 @@ router.post('/', authLockedRoute, async (req, res) => {
     }
 })
 
+router.put('/', authLockedRoute, async (req, res) => {
+    /* this route is currently functional but in "proof of concept" mode --
+    will eventually receive information from the req that will (a) determine
+    which post the user wants to update, and (b) determine what fields are being
+    updated with what info */
+    try {
+        const postToUpdate = await db.Post.findOne({
+            poster: res.locals.user._id,
+        })
+        postToUpdate.postBody = "this is the new post body"
+        await postToUpdate.save()
+        console.log(postToUpdate)
+        res.json(postToUpdate)
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+// INCOMPLETE ROUTES/STUBS
+
+router.get('/', (req, res) => {
+    // get several posts to populate home page
+    res.json({ msg: 'welcome to the posts endpoint' })
+})
+
 router.get('/:id', (req, res) => {
     // get single post from DB
     res.json({ msg: 'here is one single post' })
-})
-
-router.put('/', (req, res) => {
-    // update one single post in DB
-    res.json({ msg: 'updated a post' })
 })
 
 router.delete('/', (req, res) => {
