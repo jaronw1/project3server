@@ -16,29 +16,23 @@ const CommentSchema = new mongoose.Schema(
 
 const PostSchema = new mongoose.Schema(
     {
-        postId: {
-            Number,
-        },
-        userId: {
-            Number,
-        },
         isReview: {
-            Boolean,
+            type: Boolean,
         },
         postTitle: {
-            String,
+            type: String,
         },
         postBody: {
-            String,
+            type: String,
         },
         taggedGame: {
-            Number,
+            type: Number,
         },
         rating: {
-            Number,
+            type: Number,
         },
         imageUrl: {
-            String,
+            type: String,
         },
         comments: [CommentSchema],
         poster: {
