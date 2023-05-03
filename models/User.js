@@ -1,6 +1,8 @@
 // require mongoose ODM
 const mongoose = require('mongoose')
 
+
+
 const UserSchema = new mongoose.Schema({
 	name: {
 		type: String
@@ -10,7 +12,11 @@ const UserSchema = new mongoose.Schema({
 	},
 	password: {
 		type: String
-	}
+	},
+	posts: [{
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "Post"
+	}]
 }, {
 	timestamps: true
 })

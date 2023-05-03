@@ -1,5 +1,16 @@
 const mongoose = require('mongoose')
 
+const CommentSchema = new mongoose.Schema({
+    content: {
+        type: String
+    }, 
+    username: {
+        type: String
+    }
+}, {
+    timestamps: true
+})
+
 const PostSchema = new mongoose.Schema({
     postId: {
         Number
@@ -24,8 +35,14 @@ const PostSchema = new mongoose.Schema({
     },
     imageUrl: {
         String
+    },
+    comments: [CommentSchema],
+    poster: {
+        // tell mongoose that this is a referenced
+        type: mongoose.Schema.Types.ObjectId, 
+        // tell mongoose what is beging referenced
+        ref: "User"
     }
-
 }, {
 	timestamps: true
 })
