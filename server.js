@@ -19,8 +19,13 @@ app.get('/', (req, res) => {
     res.json({ msg: 'hello backend 🤖' })
 })
 
+app.get('/games', (req, res) => {
+    res.json({ msg: 'this is the games route' })
+})
+
 // controllers
 app.use('/users', require('./controllers/users.js'))
+app.use('/posts', require('./controllers/posts.js'))
 
 // hey listen
 app.listen(PORT, () => {
