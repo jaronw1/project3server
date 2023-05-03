@@ -5,6 +5,18 @@ const authLockedRoute = require('./authLockedRoute')
 
 // FEATURE COMPLETE ROUTES
 
+router.get('/', async (req, res) => {
+    /* this route currently gets the 10 newest posts from the DB -- 10 is
+    an arbitrary choice for now, can revisit this limit as needed when fully
+    implementing the home page */
+    try {
+        const fetchedPosts = await db.Post.find().limit(10).sort('-createdAt')
+        res.json(fetchedPosts)
+    } catch (error) {
+        console.log(error)
+    }
+})
+
 router.post('/', authLockedRoute, async (req, res) => {
     /* currently using placeholder null values for all post details. when
     fully implemented, this route will receive post details from a form */
@@ -47,7 +59,7 @@ router.put('/', authLockedRoute, async (req, res) => {
         const postToUpdate = await db.Post.findOne({
             poster: res.locals.user._id,
         })
-        postToUpdate.postBody = "this is the new post body"
+        postToUpdate.postBody = 'this is the new post body'
         await postToUpdate.save()
         console.log(postToUpdate)
         res.json(postToUpdate)
@@ -57,11 +69,6 @@ router.put('/', authLockedRoute, async (req, res) => {
 })
 
 // INCOMPLETE ROUTES/STUBS
-
-router.get('/', (req, res) => {
-    // get several posts to populate home page
-    res.json({ msg: 'welcome to the posts endpoint' })
-})
 
 router.get('/:id', (req, res) => {
     // get single post from DB
