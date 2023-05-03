@@ -12,9 +12,35 @@ router.get('/', (req, res) => {
     res.json({ msg: 'welcome to the posts endpoint' })
 })
 
-router.post('/', (req, res) => {
-    // create post in DB
-    res.json({ msg: 'created a post' })
+router.post('/', authLockedRoute, async (req, res) => {
+    try {
+        let isReview = null,
+            postTitle = null,
+            postBody = null,
+            taggedGame = null,
+            rating = null,
+            imageUrl = null
+        const testUser = await db.User.findOne({
+            _id: res.locals.user._id,
+        })
+        const newPost = db.Post({
+            isReview,
+            postTitle,
+            postBody,
+            taggedGame,
+            rating,
+            imageUrl,
+            comments: [],
+            poster: testUser._id,
+        })
+        res.locals.user.posts.push(newPost)
+        await newPost.save()
+        await res.locals.user.save()
+        console.log('makin a post')
+        res.json(newPost)
+    } catch (error) {
+        console.log(error)
+    }
 })
 
 router.get('/:id', (req, res) => {
