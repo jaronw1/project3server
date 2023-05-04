@@ -38,12 +38,8 @@ router.post('/', authLockedRoute, async (req, res) => {
     /* currently using placeholder null values for all post details. when
     fully implemented, this route will receive post details from a form */
     try {
-        let isReview = null,
-            postTitle = null,
-            postBody = null,
-            taggedGame = null,
-            rating = null,
-            imageUrl = null
+        console.log(req.body)
+        const {isReview, postTitle, imageUrl, taggedGame, rating, postBody} = req.body
         const testUser = await db.User.findOne({
             _id: res.locals.user._id,
         })
@@ -61,7 +57,9 @@ router.post('/', authLockedRoute, async (req, res) => {
         await newPost.save()
         await res.locals.user.save()
         console.log('makin a post')
-        res.json(newPost)
+        console.log(newPost)
+        // Will send back id of new posts so client can navigate to page of post.
+        res.send(newPost._id)
     } catch (error) {
         console.log(error)
     }
