@@ -17,6 +17,23 @@ router.get('/', async (req, res) => {
     }
 })
 
+router.get('/:id', async (req, res) => {
+    try {
+        const foundPost = await db.Post.findOne({
+            _id: req.params.id,
+        })
+        console.log(foundPost)
+        if (foundPost) {
+            res.json(foundPost)
+        } else {
+            // this else block only fires if the id param is a valid hash that is not found in the DB.  if id param is not a valid hash, an error will be thrown and we'll end up in the catch block.  Need to implement decent error handling for any possible input of req.params.id
+            res.sendStatus(404)
+        }
+    } catch (error) {
+        console.log(error)
+    }
+})
+
 router.post('/', authLockedRoute, async (req, res) => {
     /* currently using placeholder null values for all post details. when
     fully implemented, this route will receive post details from a form */
@@ -62,18 +79,13 @@ router.put('/', authLockedRoute, async (req, res) => {
         postToUpdate.postBody = 'this is the new post body'
         await postToUpdate.save()
         console.log(postToUpdate)
-        res.json(postToUpdate)
+        res.send(postToUpdate)
     } catch (error) {
         console.log(error)
     }
 })
 
 // INCOMPLETE ROUTES/STUBS
-
-router.get('/:id', (req, res) => {
-    // get single post from DB
-    res.json({ msg: 'here is one single post' })
-})
 
 router.delete('/', (req, res) => {
     // destroy post in DB
