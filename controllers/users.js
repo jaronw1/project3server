@@ -103,4 +103,21 @@ router.get('/auth-locked', authLockedRoute, (req, res) => {
     res.json({ msg: 'welcome to the private route!' })
 })
 
+// ROUTE STUBS THAT NEED TO BE BUILT
+
+router.get('/:id', (req, res) => {
+	// redirect user to a user profile page
+	res.json({ msg: `hello from /users/${id} get route` })
+})
+
+router.put('/', authLockedRoute, (req, res) => {
+	// update user info in DB
+	res.json({ msg: `hello from /users put route` })
+})
+
+router.delete('/', authLockedRoute, (req, res) => {
+	// destroy user in DB
+	res.json({ msg: `hello from /users delete route` })
+})
+
 module.exports = router
