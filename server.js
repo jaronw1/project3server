@@ -3,6 +3,7 @@ require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const rowdy = require('rowdy-logger')
+const axios = require('axios')
 
 // config express app
 const app = express()
@@ -20,7 +21,23 @@ app.get('/', (req, res) => {
 })
 
 app.get('/games', (req, res) => {
-    res.json({ msg: 'this is the games route' })
+    const { search } = req.query
+    const url = `https://api.rawg.io/api/games?key=${process.env.REACT_APP_API_KEY}&page_size=5&search=${search}`
+    axios.get(url)
+        .then(response => {
+            res.send(response.data)
+        })
+        .catch(console.warn)
+})
+
+app.get('/game/details', (req, res) => {
+    const { id } = req.query
+    const url = `https://api.rawg.io/api/games/${id}?key=${process.env.REACT_APP_API_KEY}`
+    axios.get(url)
+        .then(response => {
+            res.send(response.data)
+        })
+        .catch(console.warn)
 })
 
 // controllers
