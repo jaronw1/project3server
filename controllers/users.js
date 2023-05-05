@@ -3,6 +3,7 @@ const db = require('../models')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const authLockedRoute = require('./authLockedRoute')
+const axios = require('axios')
 
 // GET /users - test endpoint
 router.get('/', (req, res) => {
@@ -84,6 +85,8 @@ router.post('/login', async (req, res) => {
             name: foundUser.name,
             email: foundUser.email,
             _id: foundUser.id,
+            posts: foundUser.posts,
+            favoriteGames: foundUser.favoriteGames
         }
 
         // sign jwt and send back
@@ -110,9 +113,18 @@ router.get('/:id', (req, res) => {
 	res.json({ msg: `hello from /users/${id} get route` })
 })
 
-router.put('/', authLockedRoute, (req, res) => {
+router.put('/', authLockedRoute, async (req, res) => {
 	// update user info in DB
-	res.json({ msg: `hello from /users put route` })
+    const {name, email, posts, favoriteGames, _id} = req.body
+    const foundUser = await db.User.findOne({
+        _id: _id
+    })
+        foundUser.name = name
+        foundUser.email = email
+        foundUser.posts = posts
+        foundUser.favoriteGames = favoriteGames
+        await foundUser.save()
+    res.send(foundUser.favoriteGames)
 })
 
 router.delete('/', authLockedRoute, (req, res) => {
