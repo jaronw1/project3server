@@ -66,10 +66,6 @@ router.post('/', authLockedRoute, async (req, res) => {
 })
 
 router.put('/', authLockedRoute, async (req, res) => {
-    /* this route is currently functional but in "proof of concept" mode --
-    will eventually receive information from the req that will (a) determine
-    which post the user wants to update, and (b) determine what fields are being
-    updated with what info */
     try {
         console.log(req.body)
         const {postTitle, postBody, taggedGame, rating, isReview, imageUrl} = req.body
