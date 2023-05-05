@@ -18,6 +18,11 @@ const UserSchema = new mongoose.Schema(
                 ref: 'Post',
             },
         ],
+        favoriteGames: [
+            {
+                type: Number
+            }
+        ]
     },
     {
         timestamps: true,
