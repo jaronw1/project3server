@@ -39,7 +39,7 @@ router.post('/', authLockedRoute, async (req, res) => {
     fully implemented, this route will receive post details from a form */
     try {
         console.log(req.body)
-        const {isReview, postTitle, imageUrl, taggedGame, rating, postBody} = req.body
+        const {postTitle, postBody, taggedGame, rating, isReview, imageUrl} = req.body
         const testUser = await db.User.findOne({
             _id: res.locals.user._id,
         })
@@ -71,10 +71,17 @@ router.put('/', authLockedRoute, async (req, res) => {
     which post the user wants to update, and (b) determine what fields are being
     updated with what info */
     try {
-        const postToUpdate = await db.Post.findOne({
-            poster: res.locals.user._id,
+        console.log(req.body)
+        const {postTitle, postBody, taggedGame, rating, isReview, imageUrl} = req.body
+        let postToUpdate = await db.Post.findOne({
+            _id: req.body._id,
         })
-        postToUpdate.postBody = 'this is the new post body'
+        postToUpdate.postTitle = postTitle
+        postToUpdate.postBody = postBody
+        postToUpdate.taggedGame = taggedGame
+        postToUpdate.rating = rating
+        postToUpdate.isReview = isReview
+        postToUpdate.imageUrl = imageUrl
         await postToUpdate.save()
         console.log(postToUpdate)
         res.send(postToUpdate)
