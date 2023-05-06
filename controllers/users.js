@@ -127,6 +127,41 @@ router.put('/', authLockedRoute, async (req, res) => {
     res.send(foundUser.favoriteGames)
 })
 
+//Change password
+router.put('/change-password', async (req, res) => {
+    const { userId, oldPassword, newPassword, confirmNewPassword } = req.body;
+
+    try {
+        if (newPassword !== confirmNewPassword) {
+            return res.status(400).json({ message: 'passwords do not match' });
+          }
+
+
+      // Get the user object from the database
+      const user = await db.User.findById(userId);
+
+      // Check if the old password matches the one stored in the database
+      const isMatch = bcrypt.compare(oldPassword, user.password);
+      if (!isMatch) {
+        return res.status(400).json({ message: 'Incorrect old password.' });
+      }
+
+      // Hash the new password and update the user object
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(newPassword, salt);
+      user.password = hashedPassword;
+
+      // Save the updated user object to the database
+      await user.save();
+
+      // Send a success response
+      res.status(200).json({ message: 'Password updated successfully.' });
+    } catch (error) {
+      // Send an error response
+      res.status(500).json({ message: 'An error occurred while changing the password.' });
+    }
+  });
+
 router.delete('/', authLockedRoute, (req, res) => {
 	// destroy user in DB
 	res.json({ msg: `hello from /users delete route` })
