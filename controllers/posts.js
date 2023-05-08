@@ -34,6 +34,8 @@ router.get('/:id', async (req, res) => {
     }
 })
 
+
+
 router.post('/', authLockedRoute, async (req, res) => {
     /* currently using placeholder null values for all post details. when
     fully implemented, this route will receive post details from a form */
@@ -86,6 +88,26 @@ router.put('/', authLockedRoute, async (req, res) => {
     }
 })
 
+router.put('/:id/comment', (req, res) => {
+    let comment = req.body.comment
+    comment.postedBy = req.body.userId
+
+    db.Post.findByIdAndUpdate(
+        req.body._id,
+        { $push: { comments: req.body.userId}},
+        { new: true }
+    ).exec(( err, result) => {
+        if (err) {
+            return res.status(400).json({
+                error: err
+            })
+        } else {
+            res.json(result)
+        }
+    })
+    
+    
+})
 // INCOMPLETE ROUTES/STUBS
 
 router.delete('/', (req, res) => {
