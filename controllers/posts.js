@@ -88,24 +88,19 @@ router.put('/', authLockedRoute, async (req, res) => {
     }
 })
 
-router.put('/:id/comment', (req, res) => {
-    let comment = req.body.comment
-    comment.postedBy = req.body.userId
-
-    db.Post.findByIdAndUpdate(
-        req.body._id,
-        { $push: { comments: req.body.userId}},
-        { new: true }
-    ).exec(( err, result) => {
-        if (err) {
-            return res.status(400).json({
-                error: err
-            })
-        } else {
-            res.json(result)
-        }
-    })
-    
+router.post('/:id/comments', async (req, res) => {
+    // let _id = req.params.id
+    try { 
+        const foundPost = await db.Post.findById({
+            _id: req.params.id
+        })
+        foundPost.comments.push(req.body)
+        await foundPost.save()
+        res.send(foundPost)
+    } catch (error) {
+        console.log(error)
+        
+    }
     
 })
 // INCOMPLETE ROUTES/STUBS

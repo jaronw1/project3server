@@ -5,7 +5,7 @@ const CommentSchema = new mongoose.Schema(
         content: {
             type: String,
         },
-        username: {
+        postedBy: {
             type: String,
         },
     },
