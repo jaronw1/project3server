@@ -10,6 +10,18 @@ router.get('/', (req, res) => {
     res.json({ msg: 'welcome to the users endpoint' })
 })
 
+
+//GETS a specific user -- must pass the id through the query on client side
+router.get('/posts', async (req,res) => {
+    const { userId } = req.query
+    console.log(userId)
+    const foundUser = await db.User.findOne({
+        _id: userId
+    }).populate('posts')
+    console.log('user',foundUser.posts)
+    res.send(foundUser.posts)
+})
+
 // POST /users/register - CREATE new user
 router.post('/register', async (req, res) => {
     try {
