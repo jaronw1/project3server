@@ -26,7 +26,7 @@ router.get('/:id', async (req, res) => {
         if (foundPost) {
             const _id = foundPost.poster
             const foundUser = await db.User.findOne({
-                _id
+                _id,
             })
             res.json([foundPost, foundUser.name])
         } else {
@@ -38,14 +38,11 @@ router.get('/:id', async (req, res) => {
     }
 })
 
-
-
 router.post('/', authLockedRoute, async (req, res) => {
-    /* currently using placeholder null values for all post details. when
-    fully implemented, this route will receive post details from a form */
     try {
         console.log(req.body)
-        const {postTitle, postBody, taggedGame, rating, isReview, imageUrl} = req.body
+        const { postTitle, postBody, taggedGame, rating, isReview, imageUrl } =
+            req.body
         const testUser = await db.User.findOne({
             _id: res.locals.user._id,
         })
@@ -74,7 +71,8 @@ router.post('/', authLockedRoute, async (req, res) => {
 router.put('/', authLockedRoute, async (req, res) => {
     try {
         console.log(req.body)
-        const {postTitle, postBody, taggedGame, rating, isReview, imageUrl} = req.body
+        const { postTitle, postBody, taggedGame, rating, isReview, imageUrl } =
+            req.body
         let postToUpdate = await db.Post.findOne({
             _id: req.body._id,
         })
@@ -94,24 +92,27 @@ router.put('/', authLockedRoute, async (req, res) => {
 
 router.post('/:id/comments', async (req, res) => {
     // let _id = req.params.id
-    try { 
+    try {
         const foundPost = await db.Post.findById({
-            _id: req.params.id
+            _id: req.params.id,
         })
         foundPost.comments.push(req.body)
         await foundPost.save()
         res.send(foundPost)
     } catch (error) {
         console.log(error)
-        
     }
-    
 })
-// INCOMPLETE ROUTES/STUBS
 
-router.delete('/', (req, res) => {
-    // destroy post in DB
-    res.json({ msg: 'deleted a post' })
+router.delete('/', async (req, res) => {
+    try {
+        const foundPost = await db.Post.findByIdAndDelete({
+            _id: req.body.id,
+        })
+        res.sendStatus(204)
+    } catch (error) {
+        console.log(error)
+    }
 })
 
 module.exports = router
