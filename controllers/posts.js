@@ -24,7 +24,11 @@ router.get('/:id', async (req, res) => {
         })
         console.log(foundPost)
         if (foundPost) {
-            res.json(foundPost)
+            const _id = foundPost.poster
+            const foundUser = await db.User.findOne({
+                _id
+            })
+            res.json([foundPost, foundUser.name])
         } else {
             // this else block only fires if the id param is a valid hash that is not found in the DB.  if id param is not a valid hash, an error will be thrown and we'll end up in the catch block.  Need to implement decent error handling for any possible input of req.params.id
             res.sendStatus(404)
