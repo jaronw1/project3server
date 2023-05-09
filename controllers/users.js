@@ -6,8 +6,12 @@ const authLockedRoute = require('./authLockedRoute')
 const axios = require('axios')
 
 // GET /users - test endpoint
-router.get('/', (req, res) => {
-    res.json({ msg: 'welcome to the users endpoint' })
+router.get('/', async (req, res) => {
+    const { userEmail } = req.query
+    const foundUser = await db.User.findOne({
+        email: userEmail
+    })
+    res.send(foundUser)
 })
 
 
