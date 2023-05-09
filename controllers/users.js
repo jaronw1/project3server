@@ -18,11 +18,11 @@ router.get('/', async (req, res) => {
 //GETS a specific user -- must pass the id through the query on client side
 router.get('/posts', async (req,res) => {
     const { userId } = req.query
-    console.log(userId)
+    // console.log(userId)
     const foundUser = await db.User.findOne({
         _id: userId
     }).populate('posts')
-    console.log('user',foundUser.posts)
+    // console.log('user',foundUser.posts)
     res.send(foundUser.posts)
 })
 
@@ -118,16 +118,16 @@ router.post('/login', async (req, res) => {
 // GET /auth-locked - will redirect if bad jwt token is found
 router.get('/auth-locked', authLockedRoute, (req, res) => {
     // use res.locals.user here to do authorization stuff
-    console.log('logged in user:', res.locals.user)
+    // console.log('logged in user:', res.locals.user)
     res.json({ msg: 'welcome to the private route!' })
 })
 
 // ROUTE STUBS THAT NEED TO BE BUILT
 
-router.get('/:id', (req, res) => {
-	// redirect user to a user profile page
-	res.json({ msg: `hello from /users/${id} get route` })
-})
+// router.get('/:id', (req, res) => {
+// 	// redirect user to a user profile page
+// 	res.json({ msg: `hello from /users/${id} get route` })
+// })
 
 router.put('/', authLockedRoute, async (req, res) => {
 	// update user info in DB
@@ -177,6 +177,27 @@ router.put('/change-password', async (req, res) => {
       res.status(500).json({ message: 'An error occurred while changing the password.' });
     }
   });
+
+  router.get('/favorites', async (req, res) => {
+    /* this route currently gets the 10 newest posts from the DB -- 10 is
+    an arbitrary choice for now, can revisit this limit as needed when fully
+    implementing the home page */
+    const {userId} = req.query
+    console.log('this is the user id',userId)
+    // try {
+
+        const fetchedFavorites = await db.User.findOne({
+            _id: userId
+        })
+        .sort('favoriteGames')
+        .populate('favoriteGames')
+
+        res.send(fetchedFavorites)
+        // console.log(fetchedFavorites)
+    // } catch (error) {
+    //     console.log(error)
+    // }
+})
 
 router.delete('/', authLockedRoute, (req, res) => {
 	// destroy user in DB
