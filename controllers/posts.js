@@ -24,7 +24,11 @@ router.get('/:id', async (req, res) => {
         })
         console.log(foundPost)
         if (foundPost) {
-            res.json(foundPost)
+            const _id = foundPost.poster
+            const foundUser = await db.User.findOne({
+                _id,
+            })
+            res.json([foundPost, foundUser.name])
         } else {
             // this else block only fires if the id param is a valid hash that is not found in the DB.  if id param is not a valid hash, an error will be thrown and we'll end up in the catch block.  Need to implement decent error handling for any possible input of req.params.id
             res.sendStatus(404)
@@ -34,14 +38,11 @@ router.get('/:id', async (req, res) => {
     }
 })
 
-
-
 router.post('/', authLockedRoute, async (req, res) => {
-    /* currently using placeholder null values for all post details. when
-    fully implemented, this route will receive post details from a form */
     try {
         console.log(req.body)
-        const {postTitle, postBody, taggedGame, rating, isReview, imageUrl} = req.body
+        const { postTitle, postBody, taggedGame, rating, isReview, imageUrl } =
+            req.body
         const testUser = await db.User.findOne({
             _id: res.locals.user._id,
         })
@@ -70,7 +71,8 @@ router.post('/', authLockedRoute, async (req, res) => {
 router.put('/', authLockedRoute, async (req, res) => {
     try {
         console.log(req.body)
-        const {postTitle, postBody, taggedGame, rating, isReview, imageUrl} = req.body
+        const { postTitle, postBody, taggedGame, rating, isReview, imageUrl } =
+            req.body
         let postToUpdate = await db.Post.findOne({
             _id: req.body._id,
         })
@@ -90,24 +92,27 @@ router.put('/', authLockedRoute, async (req, res) => {
 
 router.post('/:id/comments', async (req, res) => {
     // let _id = req.params.id
-    try { 
+    try {
         const foundPost = await db.Post.findById({
-            _id: req.params.id
+            _id: req.params.id,
         })
         foundPost.comments.push(req.body)
         await foundPost.save()
         res.send(foundPost)
     } catch (error) {
         console.log(error)
-        
     }
-    
 })
-// INCOMPLETE ROUTES/STUBS
 
-router.delete('/', (req, res) => {
-    // destroy post in DB
-    res.json({ msg: 'deleted a post' })
+router.delete('/:id', authLockedRoute, async (req, res) => {
+    try {
+        await db.Post.findByIdAndDelete({
+            _id: req.params.id,
+        })
+        res.sendStatus(204)
+    } catch (error) {
+        console.log(error)
+    }
 })
 
 module.exports = router
