@@ -104,10 +104,10 @@ router.post('/:id/comments', async (req, res) => {
     }
 })
 
-router.delete('/', async (req, res) => {
+router.delete('/:id', authLockedRoute, async (req, res) => {
     try {
-        const foundPost = await db.Post.findByIdAndDelete({
-            _id: req.body.id,
+        await db.Post.findByIdAndDelete({
+            _id: req.params.id,
         })
         res.sendStatus(204)
     } catch (error) {
