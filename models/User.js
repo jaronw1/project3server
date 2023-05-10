@@ -20,7 +20,7 @@ const UserSchema = new mongoose.Schema(
         ],
         favoriteGames: [
             {
-                type: Number
+                type: String
             }
         ]
     },
